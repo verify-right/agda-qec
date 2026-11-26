@@ -1,0 +1,27 @@
+name: Agda
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: agda/agda-setup-action@v1
+        id: agda
+        with:
+          agda-version: '2.9.0'
+          agda-stdlib-version: '2.4.1'
+
+      - run: echo standard-library-2.4 > "$AGDA_DIR/defaults"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.agda.outputs.agda-dir }}/libraries.d/agda-stdlib-2.4.1/_build
+          key: agda-2.9.0-stdlib-2.4.1
+
+      - run: find src -name '*.agda' -print0 | xargs -0 -n1 agda
