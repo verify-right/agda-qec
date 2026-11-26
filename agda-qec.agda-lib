@@ -1,0 +1,3 @@
+name: agda-finite-fourier
+include: src
+depend: standard-library-2.4
