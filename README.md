@@ -27,7 +27,7 @@ See: [Agda FiniteSums.agda], [Agda Bool Properties.agda].
 
 | Agda theorem | Mathematical content | Meaning |
 |---|---|---|
-| `boundary-cycle : ∀ {m k n} (X : Matrix m n) (Z : Matrix k n) → Orthogonal X Z → ∀ s → Kernel X (apply (tr Z) s)` | $H_XH_Z^T=0\implies\operatorname{im}H_Z^T\subseteq\ker H_X$ | Every Z-stabilizer combination has zero X syndrome. |
+| `boundary-cycle : ∀ {m k n} (X : Matrix m n) (Z : Matrix k n) → Orthogonal X Z → ∀ s → Kernel X (apply (tr Z) s)` | $H_XH_Z^T=0\implies\mathrm{im}(H_Z^T)\subseteq\ker(H_X)$ | Every Z-stabilizer combination has zero X syndrome. |
 | `cycle-rows : ∀ {m k n} (X : Matrix m n) (Z : Matrix k n) → (∀ s → Kernel X (apply (tr Z) s)) → Orthogonal X Z` | Converse of `boundary-cycle` | The chain condition implies row orthogonality. |
 
 See: [Calderbank–Shor], [Steane]; [Lean-QEC CSS.lean]
