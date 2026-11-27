@@ -6,7 +6,9 @@ open import Data.Nat.Base using (ℕ)
 open import Data.Product.Base using (_×_; _,_)
 open import Data.Bool.Properties using (xor-same)
 open import Relation.Binary.PropositionalEquality as E using (_≡_)
-import Fourier.Sums R as S
+import Algebra.FiniteSums R as S
+import Algebra.Properties.CommutativeSemigroup as CS
+module Add = CS Law.+-commutativeSemigroup
 
 -- Representatives X^x Z^z act on signed computational basis labels.
 record Pauli (n : ℕ) : Set where
@@ -30,7 +32,7 @@ phase-law s a b c d = E.trans (E.sym (Law.+-assoc (s xor a) b c))
   swap = E.trans (Law.+-assoc s a b) (E.trans (E.cong (s xor_) (Law.+-comm a b)) (E.sym (Law.+-assoc s b a)))
   cancel : ∀ u c d → u xor c ≡ (c xor d) xor (u xor d)
   cancel u c d = E.trans (Law.+-comm u c) (E.trans (E.sym (Law.+-identityʳ (c xor u)))
-    (E.trans (E.cong ((c xor u) xor_) (E.sym (xor-same d))) (S.Add.interchange c u d d)))
+    (E.trans (E.cong ((c xor u) xor_) (E.sym (xor-same d))) (Add.interchange c u d d)))
 
 open import Data.Product.Base using (proj₁; proj₂)
 swap-label : ∀ {n} (p q : Pauli n) t →

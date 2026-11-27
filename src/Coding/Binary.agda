@@ -9,8 +9,8 @@ open import Relation.Binary.PropositionalEquality as E using (_≡_; cong; cong�
 import Algebra.Bundles as Bundles
 R = xor-∧-commutativeRing
 module Law = Bundles.CommutativeRing R
-open import Fourier.Sums R public using (sum; delta)
-import Fourier.Sums R as S
+open import Algebra.FiniteSums R public using (sum; delta)
+import Algebra.FiniteSums R as S
 
 Word : ℕ → Set
 Word n = Fin n → Bool
