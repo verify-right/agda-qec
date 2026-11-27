@@ -56,6 +56,38 @@ See: [Gottesman]; [QECLean SymplecticInner.lean]
 `BinSympPauli_toPauli_commute_iff_symplecticProd_zero`;
 [Lean-QEC SyndromeAction.lean].
 
+### Certified single-bit decoding
+
+[Decoder.agda](src/Coding/Decoder.agda) implements syndrome
+decoding for arbitrary binary parity-check matrices.
+
+The module `Single` is parameterized by `H : Matrix m n`.
+
+| Agda theorem | Mathematical content | Meaning |
+|---|---|---|
+| `search : (s : Word m) → Dec (Σ (Fin n) (λ j → Column j ≐ s))` | Decidable column search | Find a coordinate matching the syndrome or prove that none exists. |
+| `flip-syndrome : ∀ c → Kernel H c → ∀ j → apply H (c ⊞ delta j) ≐ Column j` | $H(c+e_j)=He_j$ | The syndrome of a single-bit error is the corresponding column. |
+| `one-error : (∀ j k → Column j ≐ Column k → j E.≡ k) → ∀ c → Kernel H c → ∀ j → correct (c ⊞ delta j) ≐ c` | Single-error correction | Distinct columns suffice to correct every single-bit corruption of a codeword. |
+| `clean : (∀ j → Column j ≐ zero → ⊥) → ∀ c → Kernel H c → correct c ≐ c` | Preservation of codewords | Nonzero columns ensure that uncorrupted codewords remain unchanged. |
+
+### Hamming code
+
+[Hamming.agda](src/Coding/Hamming.agda) instantiates the
+decoder with the seven nonzero binary columns of length three.
+
+| Agda theorem | Mathematical content | Meaning |
+|---|---|---|
+| `column-value : ∀ j → number (D.Column j) E.≡ N.suc (F.toℕ j)` | Column enumeration | Column `j` represents the integer `j + 1`. |
+| `distinct : ∀ j k → D.Column j ≐ D.Column k → j E.≡ k` | Injectivity | Different coordinates have different syndromes. |
+| `nonzero : ∀ j → D.Column j ≐ zero → Data.Empty.⊥` | Nonzero columns | Every single-bit error has a nonzero syndrome. |
+| `recover-one : ∀ c → Kernel H c → ∀ j → D.correct (c ⊞ delta j) ≐ c` | Single-error correction | Every single-bit corruption of every codeword is corrected. |
+| `recover-clean : ∀ c → Kernel H c → D.correct c ≐ c` | Preservation of codewords | Decoding an uncorrupted codeword leaves it unchanged. |
+
+See: [Hamming]; [Agda Fin Properties.agda] `any?`, `all?`.
+
+The correction guarantees concern classical binary errors,
+not arbitrary quantum errors or multiple-bit corruption.
+
 ## Tutorials
 
 See [TUTORIALS.md](TUTORIALS.md).
@@ -67,6 +99,7 @@ See [TUTORIALS.md](TUTORIALS.md).
 - A. R. [Calderbank–Shor], *Good Quantum Error-Correcting Codes Exist* (1996).
 - A. M. [Steane], *Multiple-Particle Interference and Quantum Error Correction* (1996).
 - D. [Gottesman], *Stabilizer Codes and Quantum Error Correction* (1997).
+- R. W. [Hamming], *Error Detecting and Error Correcting Codes* (1950).
 
 ### Related formalizations
 
@@ -80,6 +113,7 @@ See [TUTORIALS.md](TUTORIALS.md).
 
 - [Agda FiniteSums.agda] - finite sums, linearity, exchange of summation and Kronecker delta. Reused from agda-finite-fourier.
 - [Agda Bool Properties.agda] - Boolean ring structure.
+- [Agda Fin Properties.agda] - constructive finite existential and universal decision procedures.
 
 [Calderbank–Shor]: https://doi.org/10.1103/PhysRevA.54.1098
 [Steane]: https://arxiv.org/abs/quant-ph/9601029
@@ -91,3 +125,5 @@ See [TUTORIALS.md](TUTORIALS.md).
 [Lean-QEC SyndromeAction.lean]: https://github.com/VerifiedQC/Lean-QEC/blob/3ecc50283caaa257c9da3a000ab57c5401039e2e/LeanQEC/Decoding/SyndromeAction.lean
 [Agda FiniteSums.agda]: https://github.com/verify-right/agda-finite-fourier/blob/72b5b977aa90c21d24926eae8d45ecbdbb1c1089/src/Algebra/FiniteSums.agda
 [Agda Bool Properties.agda]: https://github.com/agda/agda-stdlib/blob/v2.4.1/src/Data/Bool/Properties.agda
+[Hamming]: https://doi.org/10.1002/j.1538-7305.1950.tb00463.x
+[Agda Fin Properties.agda]: https://github.com/agda/agda-stdlib/blob/v2.4.1/src/Data/Fin/Properties.agda
