@@ -11,7 +11,8 @@ open import Relation.Nullary.Decidable using (Dec; yes; no)
 import Relation.Binary.PropositionalEquality as E
 
 module Single {m n} (H : Matrix m n) where
-  Column = λ j → tr H j
+  Column : Fin n → Word m
+  Column = tr H
   search : (s : Word m) → Dec (Σ (Fin n) (λ j → Column j ≐ s))
   search s = any? (λ j → all? (λ i → H i j ≟ s i))
   correct : Word n → Word n

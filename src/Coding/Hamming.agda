@@ -32,6 +32,9 @@ nonzero : ∀ j → D.Column j ≐ zero → Data.Empty.⊥
 nonzero j eq with E.trans (E.sym (column-value j)) (number-cong (D.Column j) zero eq)
 ... | ()
 
-
+recover-one : ∀ c → Kernel H c → ∀ j →
+  D.correct (c ⊞ delta j) ≐ c
 recover-one = D.one-error distinct
+
+recover-clean : ∀ c → Kernel H c → D.correct c ≐ c
 recover-clean = D.clean nonzero
